@@ -15,7 +15,7 @@ namespace GlobalList::API {
                 GlobalList::Levels::clear();
                 auto data = value.json();
 
-                matjson::Value json = data.ok().value();
+                matjson::Value json = data.unwrapOrDefault();
                 if (!json.contains("data") || !json["data"].contains("levels") || !json["data"]["levels"].isArray() || json["data"]["levels"].size() == 0) {
                     Utils::failure(204);
                     return;
@@ -57,11 +57,16 @@ namespace GlobalList::API {
                     }
                     else {
                         auto data = value.json();
-                        auto json = data.ok().value();
+                        auto json = data.unwrapOrDefault();
+
+                        if (!json.contains("data") || json["data"].size() == 0) {
+                            Utils::failure(204);
+                            return;
+                        }
 
                         auto levelData = json["data"];
 
-                        placement = levelData["placement"].asInt().ok().value();
+                        placement = levelData["placement"].asInt().unwrapOrDefault();
 
                         if (placement > 0) GlobalList::Cache::savePlacement(levelID, placement);
                         else placement = -1;

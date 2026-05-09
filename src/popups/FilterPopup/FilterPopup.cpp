@@ -174,7 +174,7 @@ bool FilterPopup::init() {
 		});
 	lengthFilterMenu->addChild(customLenBtn);
 
-	auto customLenOptionsBtn = CCMenuItemExt::createSpriteExtra(optionsSpr, [this](auto) { RangePopup::create(FilterType::Lenght)->show(); });
+	auto customLenOptionsBtn = CCMenuItemExt::createSpriteExtra(optionsSpr, [this](auto) { RangePopup::create(FilterType::Length)->show(); });
 	customLenOptionsBtn->updateLayout();
 	lengthFilterMenu->addChild(customLenOptionsBtn);
 
@@ -231,7 +231,7 @@ bool FilterPopup::init() {
 
 	auto completedFilterToggler = CCMenuItemExt::createTogglerWithStandardSprites(1.0f, [this](CCMenuItemToggler* toggler) {
 		if (!toggler->isOn()) GlobalList::Filters::setCompleted(true);
-		else GlobalList::Filters::setCompleted(true);
+		else GlobalList::Filters::setCompleted(false);
 	});
 	completedFilterToggler->toggle(displayFilters.completed);
 	completedFilterToggler->setScale(0.75f);

@@ -15,12 +15,12 @@ bool RangePopup::init(FilterType type) {
 
 	this->setID("range-menu");
 	this->setZOrder(102);
-	this->setTitle(type == FilterType::Lenght ? "Custom length" : "Custom difficulty");
+	this->setTitle(type == FilterType::Length ? "Custom length" : "Custom difficulty");
 
 	m_closeBtn->setVisible(false);
 	m_filterType = type;
 	auto& levelFilters = GlobalList::Filters::getLevelFilters();
-	auto& saved = type == FilterType::Lenght ? levelFilters.customLengthFilter : levelFilters.customDiffFilter;
+	auto& saved = type == FilterType::Length ? levelFilters.customLengthFilter : levelFilters.customDiffFilter;
 
 	auto label = CCLabelBMFont::create("From         to        ", "bigFont.fnt");
 	label->setScale(0.45f);
@@ -45,7 +45,7 @@ bool RangePopup::init(FilterType type) {
 		int from = numFromString<int>(m_fromTextInput->getString().size() != 0 ? m_fromTextInput->getString() : "0").unwrapOrDefault();
 		int to = numFromString<int>(m_toTextInput->getString().size() != 0 ? m_toTextInput->getString() : "0").unwrapOrDefault();
 
-		if (type == FilterType::Lenght) GlobalList::Filters::setCustomLengthFilter(from, to);
+		if (type == FilterType::Length) GlobalList::Filters::setCustomLengthFilter(from, to);
 		else GlobalList::Filters::setCustomDifficultyFilter(from, to);
 
 		Popup::onClose(this);
@@ -64,11 +64,11 @@ void RangePopup::onClose(cocos2d::CCObject*) {
 	int to = numFromString<int>(m_toTextInput->getString().size() != 0 ? m_toTextInput->getString() : "0").unwrapOrDefault();
 
 	auto& levelFilters = GlobalList::Filters::getLevelFilters();
-	auto& saved = m_filterType == FilterType::Lenght ? levelFilters.customLengthFilter : levelFilters.customDiffFilter;
+	auto& saved = m_filterType == FilterType::Length ? levelFilters.customLengthFilter : levelFilters.customDiffFilter;
 	if (from != saved[0] || to != saved[1]) {
 		createQuickPopup("Hey!", "Fields not saved. Save and close?", "No", "Yes", [this, &saved, from, to](auto, bool yesBtn) {
 			if (yesBtn) {
-				if (m_filterType == FilterType::Lenght) GlobalList::Filters::setCustomLengthFilter(from, to);
+				if (m_filterType == FilterType::Length) GlobalList::Filters::setCustomLengthFilter(from, to);
 				else GlobalList::Filters::setCustomDifficultyFilter(from, to);
 
 				Popup::onClose(this);

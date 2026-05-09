@@ -6,7 +6,7 @@
 using namespace geode::prelude;
 
 enum class FilterType {
-	Lenght, Difficulty
+	Length, Difficulty
 };
 
 class RangePopup : public geode::Popup {

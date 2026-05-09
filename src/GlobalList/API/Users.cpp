@@ -16,7 +16,7 @@ namespace GlobalList::API {
 
                 auto data = value.json();
 
-                matjson::Value json = data.ok().value();
+                matjson::Value json = data.unwrapOrDefault();
                 if (!json.contains("data") || !json["data"].contains("users") || !json["data"]["users"].isArray() || json["data"]["users"].size() == 0) {
                     Utils::failure(204);
                     return;
@@ -51,7 +51,7 @@ namespace GlobalList::API {
 
                 auto data = value.json();
 
-                matjson::Value json = data.ok().value();
+                matjson::Value json = data.unwrapOrDefault();
                 if (!json.contains("data") || !json["data"].contains("records") || !json["data"]["records"].isArray() || json["data"]["records"].size() == 0) {
                     Utils::failure(204);
                     return;
