@@ -6,7 +6,7 @@ LoadingPopup* LoadingPopup::create() {
 		ret->autorelease();
 		return ret;
 	}
-	delete ret;
+	CC_SAFE_DELETE(ret);
 	return nullptr;
 }
 
@@ -47,8 +47,6 @@ bool LoadingPopup::init() {
 	m_mainLayer->addChild(m_loadingLabel);
 	m_buttonMenu->addChild(cancelBtn);
 	
-	getLevels();
-
 	auto& displayFilters = GlobalList::Filters::getDisplayFilters();
 	m_userEvent = UserCachedEvent(displayFilters.username).listen(
 		[this]() {
@@ -61,6 +59,8 @@ bool LoadingPopup::init() {
 		}
 	);
 
+	getLevels();
+
 	return true;
 }
 
@@ -70,14 +70,16 @@ void LoadingPopup::getLevels() {
 	m_requiredLevels.clear();
 
 	for (size_t i = 0; i < GlobalList::Levels::size(); i++) {
-			int levelID = GlobalList::Levels::getLevelByIndex(i)->levelID;
+		int levelID = GlobalList::Levels::getLevelByIndex(i)->levelID;
 
-			m_requiredLevels.push_back(levelID);
-		}
+		m_requiredLevels.push_back(levelID);
+	}
 
 	auto& displayFilters = GlobalList::Filters::getDisplayFilters();
-	if (displayFilters.completed && !displayFilters.username.empty())
+	if (displayFilters.completed && !displayFilters.username.empty()) {
+		m_loadingLabel->setString(fmt::format("Loading data about player \"{}\"", displayFilters.username).c_str());
 		GlobalList::API::getUser(displayFilters.username, true);
+	}
 	else if (m_requiredLevels.size() != 0) {
 		m_loading = true;
 		m_currentBatch = 0;
@@ -124,10 +126,10 @@ void LoadingPopup::loadBatch(float) {
 
 void LoadingPopup::afterLoading() {
 	GlobalList::Filters::applyFilters();
+	GlobalList::Cache::updateLevelLoadTime();
 
 	PopulateListEvent().send();
 	MyCloseEvent(PopupType::FilterPopup).send();
-	GlobalList::Cache::updateLevelLoadTime();
 
 	onClose(this);
 }
@@ -137,12 +139,11 @@ void LoadingPopup::loadLevelsFinished(CCArray* levels, char const* key) {
 	for (int i = 0; i < levels->count(); i++) {
 		if (auto levelData = typeinfo_cast<GJGameLevel*>(levels->objectAtIndex(i))) {
 			LevelData data = {
-				levelData->m_stars > 0,
-				levelData->m_stars == 0,
+				levelData->m_stars.value() > 0,
 				levelData->m_creatorName
 			};
 
-			GlobalList::Cache::saveLevelData(levelData->m_levelID, data);
+			GlobalList::Cache::saveLevelData(levelData->m_levelID.value(), data);
 		}
 	}
 

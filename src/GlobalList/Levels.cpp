@@ -1,7 +1,10 @@
 #include "Levels.hpp"
 
+static int rt = 0;
+
 namespace GlobalList::Levels {
     static std::unordered_map<int, GlobalListLevel> globalListLevels;
+    static std::unordered_map<int, GlobalListLevel> levelsByPlacement;
     static std::vector<int> keys;
 
     void saveLevel(int levelID, const GlobalListLevel& levelData) {
@@ -12,11 +15,13 @@ namespace GlobalList::Levels {
         }
 
         globalListLevels[levelID] = levelData;
+        levelsByPlacement[levelData.placement] = levelData;
     }
 
     GlobalListLevel* getLevelByID(int levelID) {
-        if (globalListLevels.find(levelID) != globalListLevels.end())
+        if (globalListLevels.find(levelID) != globalListLevels.end()) {
             return &globalListLevels[levelID];
+        }
 
         return nullptr;
     }
@@ -26,6 +31,14 @@ namespace GlobalList::Levels {
 
         int levelID = keys[idx];
         return &globalListLevels[levelID];
+    }
+
+    GlobalListLevel* getLevelByPlacement(size_t placement) {
+        if (levelsByPlacement.find(placement) != levelsByPlacement.end()) {
+            return &levelsByPlacement[placement];
+        }
+        
+        return nullptr;
     }
 
     bool isSuitable(GlobalListLevel* level) {
@@ -44,22 +57,29 @@ namespace GlobalList::Levels {
         else if (level->placement <= 150) levelDiff = 1;
         else if (level->placement <= 300) levelDiff = 2;
         else if (level->placement > 300) levelDiff = 3;
-        else if (levelFilters.diffFilter[4] && (levelFilters.customDiffFilter[0] != 0 ? level->placement >= levelFilters.customDiffFilter[0] : true) && (levelFilters.customDiffFilter[1] != 0 ? level->placement < levelFilters.customDiffFilter[1] : true)) levelDiff = 4;
+        if (levelFilters.diffFilter[4] && (levelFilters.customDiffFilter[0] != 0 ? level->placement >= levelFilters.customDiffFilter[0] : true) && (levelFilters.customDiffFilter[1] != 0 ? level->placement < levelFilters.customDiffFilter[1] : true)) levelDiff = 4;
 
         auto levelData = GlobalList::Cache::getLevelData(level->levelID);
         auto userData = GlobalList::Cache::getUser(levelFilters.username);
-        bool levelIsCompleted = std::ranges::find_if(
+        bool levelIsCompleted = userData ? std::ranges::find_if(
             userData->records,
             [levelID = level->levelID](const UserLevel& userLevel) {
                 return userLevel.levelID == levelID;
             }
-        ) != userData->records.end();
+        ) != userData->records.end() : false;
         
         bool byLength = levelFilters.lengthFilter[levelLength] || levelFilters.lengthFilter == LevelFilters{}.lengthFilter;
         bool byDifficulty = levelFilters.diffFilter[levelDiff] || levelFilters.diffFilter == LevelFilters{}.diffFilter;
-        bool byRate = levelFilters.rated ? levelData->rated : (levelFilters.unrated ? levelData->unrated : true);
+        bool byRate =
+        levelData ?
+            levelFilters.rated ?
+                levelData->rated
+            : levelFilters.unrated ?
+                !levelData->rated
+            : true
+        : false;
+        bool byCreator = levelData ? (levelFilters.byHolder ? levelData->holder == levelFilters.holder : true) : false;
         bool byPlayer = levelFilters.completed ? ((userData && userData->records.size() != 0) ? levelIsCompleted : false) : true;
-        bool byCreator = (levelFilters.byHolder ? levelData->holder == levelFilters.holder : true);
 
         return byLength && byDifficulty && byRate && byPlayer && byCreator;
     }

@@ -5,7 +5,7 @@ class $modify(MyLevelSearchLayer, LevelSearchLayer) {
     bool init(int type) {
         if (!LevelSearchLayer::init(type)) return false;
 
-        auto filterMenu = this->getChildByID("other-filter-menu");
+        auto filterMenu = getChildByID("other-filter-menu");
 
         auto globalListSpr = CircleButtonSprite::createWithSprite("global-list.png"_spr);
         globalListSpr->getTopNode()->setScale(1.1f);

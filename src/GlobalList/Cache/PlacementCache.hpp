@@ -3,7 +3,7 @@
 #include <ctime>
 #include <unordered_map>
 
-#include "../../events/PositionEvent.hpp"
+#include "../../events/PlacementEvent.hpp"
 
 struct PlacementCache {
     int placement;

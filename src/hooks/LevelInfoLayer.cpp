@@ -69,7 +69,7 @@ class $modify(MyLevelInfoLayer, LevelInfoLayer) {
             gdlLabel->setID("gdl-label"_spr);
             this->addChild(gdlLabel);
 
-            m_fields->m_listener = PositionEvent(level->m_levelID.value()).listen(
+            m_fields->m_listener = PlacementEvent(level->m_levelID.value()).listen(
                 [this](int placement) {
                     if (auto gdlLabel = static_cast<CCLabelBMFont*>(this->getChildByID("gdl-label"_spr))) {
                         auto gdlIcon = this->getChildByID("gdl-icon"_spr);

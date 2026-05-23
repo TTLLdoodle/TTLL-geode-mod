@@ -7,7 +7,7 @@ GlobalListLayer* GlobalListLayer::create() {
 		ret->autorelease();
 		return ret;
 	}
-	delete ret;
+	CC_SAFE_DELETE(ret);
 	return nullptr;
 }
 
@@ -34,8 +34,9 @@ bool GlobalListLayer::init() {
 	auto GlobalListBG = CCSprite::create("global-list-bg.png"_spr);
 	GlobalListBG->setAnchorPoint({ 0.5f, 0.5f });
 	GlobalListBG->setScale(winSize.height / GlobalListBG->getTextureRect().size.height);
-	if (winSize.width > GlobalListBG->getContentWidth() * GlobalListBG->getScale())
+	if (winSize.width > GlobalListBG->getContentWidth() * GlobalListBG->getScale()) {
 		GlobalListBG->setScale(winSize.width / GlobalListBG->getTextureRect().size.width);
+	}
 	GlobalListBG->setPosition({ winSize.width / 2, winSize.height / 2 });
 	GlobalListBG->setZOrder(0);
 	GlobalListBG->setID("gdl-backgrownd");
@@ -203,16 +204,16 @@ bool GlobalListLayer::init() {
 	GlobalList::API::getDemonlist();
 
 	m_populateListener = PopulateListEvent().listen(
-		[this]() { populateList(m_query, false); }
+		[this]() { populateList(m_query); }
 	);
 
 	return true;
 }
 
-void GlobalListLayer::populateList(const std::string& query, bool useFilters) {
+void GlobalListLayer::populateList(const std::string& query) {
 	m_searchResults.clear();
 
-	if (query.empty() && !useFilters) {
+	if (query.empty() && GlobalList::Filters::getLevelFilters().isDefault()) {
 		for (size_t i = 0; i < GlobalList::Levels::size(); i++) {
 			int levelID = GlobalList::Levels::getLevelByIndex(i)->levelID;
 
@@ -271,7 +272,7 @@ void GlobalListLayer::search() {
 		showLoading();
 
 		m_page = 0;
-		populateList(query, !GlobalList::Filters::getLevelFilters().isDefault());
+		populateList(query);
 	}
 }
 
@@ -312,7 +313,7 @@ void GlobalListLayer::page(size_t page) {
 	m_page = page <= maxPage ? (page < 0 ? 0 : page) : maxPage;
 
 	showLoading();
-	populateList(m_query, !GlobalList::Filters::getLevelFilters().isDefault());
+	populateList(m_query);
 }
 
 void GlobalListLayer::setupPageInfo(gd::string, const char*) {
@@ -338,7 +339,7 @@ void GlobalListLayer::showLoading() {
 void GlobalListLayer::setIDPopupClosed(SetIDPopup*, int page) {
 	m_page = std::clamp<size_t>(page - 1, 0, (m_searchResults.size() - 1) / m_lvlsPerPage);
 	showLoading();
-	populateList(m_query, !GlobalList::Filters::getLevelFilters().isDefault());
+	populateList(m_query);
 }
 
 void GlobalListLayer::keyDown(enumKeyCodes key, double d) {

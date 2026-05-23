@@ -29,14 +29,11 @@ namespace GlobalList::Filters {
         displayFilters.customDiffFilter = {from, to};
     }
 
-    void setRated(bool rated) {
+    void setRateFilter(bool rated, bool unrated) {
         displayFilters.rated = rated;
-        if (rated) displayFilters.unrated = false;
-    }
-    void setUnrated(bool unrated) {
         displayFilters.unrated = unrated;
-        if (unrated) displayFilters.rated = false;
     }
+    
     void setCompleted(bool completed) {
         displayFilters.completed = completed;
     }

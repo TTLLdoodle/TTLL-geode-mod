@@ -46,6 +46,7 @@ namespace GlobalList::Levels {
     void saveLevel(int levelID, const GlobalListLevel& levelData);
 
     GlobalListLevel* getLevelByID(int levelID);
+    GlobalListLevel* getLevelByPlacement(size_t placement);
     GlobalListLevel* getLevelByIndex(size_t idx);
 
     bool isSuitable(GlobalListLevel* level);

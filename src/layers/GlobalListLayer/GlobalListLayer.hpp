@@ -42,7 +42,7 @@ protected:
 	std::vector<int> m_searchResults;
 
 	bool init();
-	void populateList(const std::string& query, bool useFilters = true);
+	void populateList(const std::string& query);
 	void search();
 	void page(size_t page);
 	void setupPageInfo(gd::string, const char*) override;

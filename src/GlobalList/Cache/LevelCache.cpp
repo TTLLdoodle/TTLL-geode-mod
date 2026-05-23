@@ -13,7 +13,7 @@ namespace GlobalList::Cache {
         if (it == allLevelData.end()) return nullptr;
 
         auto now = std::time(nullptr);
-        if (loadTime > 1800) return nullptr;
+        if (now - loadTime > 1800) return nullptr;
 
         return &it->second;
     }
@@ -28,5 +28,9 @@ namespace GlobalList::Cache {
 
     void updateLevelLoadTime() {
         loadTime = std::time(nullptr);
+    }
+
+    time_t getLastUpdateTime() {
+        return loadTime;
     }
 }

@@ -51,8 +51,7 @@ namespace GlobalList::Filters {
     void setCustomLengthFilter(size_t from, size_t to);
     void setCustomDifficultyFilter(size_t from, size_t to);
 
-    void setRated(bool rated) ;
-    void setUnrated(bool unrated);
+    void setRateFilter(bool rated, bool unrated);
     void setCompleted(bool completed);
     void setByHolder(bool byHolder);
 

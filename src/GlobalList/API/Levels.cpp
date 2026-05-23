@@ -46,7 +46,7 @@ namespace GlobalList::API {
     void getLevelPlacement(int levelID) {
         int cachedPlacement = GlobalList::Cache::getPlacement(levelID);
         if (cachedPlacement != -1) {
-            PositionEvent(levelID).send(cachedPlacement);
+            PlacementEvent(levelID).send(cachedPlacement);
         }
         else {
             spawn(web::WebRequest().get(fmt::format("{}/level/classic/get?ingame_id={}", API_URL, levelID)),
@@ -72,7 +72,7 @@ namespace GlobalList::API {
                         else placement = -1;
                     }
 
-                    PositionEvent(levelID).send(placement);
+                    PlacementEvent(levelID).send(placement);
                 }
             );
         }

@@ -6,7 +6,6 @@
 
 struct LevelData {
 	bool rated;
-	bool unrated;
 	std::string holder;
 };
 
@@ -18,4 +17,5 @@ namespace GlobalList::Cache {
     size_t levelDataSize();
     void levelDataClear();
     void updateLevelLoadTime();
+    time_t getLastUpdateTime();
 }

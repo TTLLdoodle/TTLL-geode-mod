@@ -86,7 +86,7 @@ class $modify(MyLevelCell, LevelCell) {
                 gdlLabel->setPositionX(gdlLabel->getPositionX() - gap * (orbIcon ? 4.0f : 3.0f));
             }
 
-            m_fields->m_listener = PositionEvent(level->m_levelID.value()).listen(
+            m_fields->m_listener = PlacementEvent(level->m_levelID.value()).listen(
                 [this](int placement) {
                     if (!m_mainLayer) return;
 

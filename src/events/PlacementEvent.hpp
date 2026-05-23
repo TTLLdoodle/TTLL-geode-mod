@@ -5,7 +5,7 @@
 
 using namespace geode::prelude;
 
-class PositionEvent : public Event<PositionEvent, bool(int), int> {
+class PlacementEvent : public Event<PlacementEvent, bool(int), int> {
 public:
     using Event::Event;
 };

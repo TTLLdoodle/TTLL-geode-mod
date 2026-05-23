@@ -23,13 +23,21 @@ namespace GlobalList::API {
                 }
 
                 for (const auto& user : json["data"]["users"]) {
-                    if (user["username"].asString().unwrapOr("") == username) {
+                    auto lowerUsername = geode::utils::string::toLower(username);
+                    auto lowerUnwrapedUsername = geode::utils::string::toLower(user["username"].asString().unwrapOr(""));
+
+                    if (lowerUnwrapedUsername == lowerUsername) {
                         int id = user["id"].asInt().unwrapOr(0);
                         int placement = user["placement"].asInt().unwrapOr(0);
                         double points = user["points"].asDouble().unwrapOr(0.0f);
 
                         auto userData = UserCache{
-                            id, username, placement, points, {}, std::time(nullptr)
+                            id,
+                            user["username"].asString().unwrapOr(""),
+                            placement,
+                            points,
+                            {},
+                            std::time(nullptr)
                         };
                         GlobalList::Cache::saveUser(username, userData);
 
@@ -64,6 +72,7 @@ namespace GlobalList::API {
                         int placement = record["level"]["placement"].asInt().unwrapOrDefault();
 
                         if (levelID != 0) userData->records.push_back( {name, levelID, placement} );
+                        if (levelID != 0) log::info("{} | {} | {}", name, levelID, placement);
 
                         UserCachedEvent(username).send();
                     }
