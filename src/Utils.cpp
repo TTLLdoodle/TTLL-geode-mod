@@ -8,10 +8,10 @@ namespace Utils {
         for (auto& [node, pos] : origPositions) if (node) onLevelCell ? node->setPositionX(pos) : node->setPositionY(pos);
     }
 
-    void failure(int code) {
+    void failure(int code, std::string whatsFailed) {
         auto alertLayer = FLAlertLayer::create(
             fmt::format("Load failed ({})", code).c_str(),
-            "Failed to load player records. Please try again.",
+            fmt::format("Failed to {}. Please try again.", whatsFailed).c_str(),
             "OK"
         );
         alertLayer->m_scene = CCDirector::get()->getRunningScene();

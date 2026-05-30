@@ -1,14 +1,14 @@
 #include "LeaderboardCache.hpp"
 
 namespace GlobalList::Cache {
-    static std::unordered_map<std::string, LeaderboardUserCache> leaderboardUserCache;
+    static std::unordered_map<std::string, LeaderboardUser> leaderboardUserCache;
 
-    void saveLeaderboardUser(const std::string& username, const LeaderboardUserCache& userData) {
+    void saveLeaderboardUser(const std::string& username, const LeaderboardUser& userData) {
         leaderboardUserCache[username] = userData;
         UserCachedEvent(username).send();
     }
 
-    LeaderboardUserCache* getLeaderboardUser(const std::string& username) {
+    LeaderboardUser* getLeaderboardUser(const std::string& username) {
         auto it = leaderboardUserCache.find(username);
         if (it == leaderboardUserCache.end()) return nullptr;
 

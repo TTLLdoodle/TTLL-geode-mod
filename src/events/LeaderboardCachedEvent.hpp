@@ -5,7 +5,7 @@
 
 using namespace geode::prelude;
 
-class LeaderboardsCachedEvent : public Event<LeaderboardsCachedEvent, bool()> {
+class LeaderboardsCachedEvent : public Event<LeaderboardsCachedEvent, bool(int)> {
 public:
     using Event::Event;
 };

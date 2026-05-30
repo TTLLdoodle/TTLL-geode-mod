@@ -5,7 +5,7 @@
 
 #include "../../events/PlacementEvent.hpp"
 
-struct PlacementCache {
+struct Placement {
     int placement;
     time_t loadTime;
 };

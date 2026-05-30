@@ -12,19 +12,21 @@ struct UserLevel {
 	int placement;
 };
 
-struct UserCache {
+struct UserData {
     int id;
     std::string username;
     int placement;
     double points;
+    std::string country;
+    std::string badge;
     std::vector<UserLevel> records;
     time_t loadTime;
 };
 
 namespace GlobalList::Cache {
-    void saveUser(const std::string& username, const UserCache& userData);
+    void saveUser(const std::string& username, const UserData& userData);
 
-    UserCache* getUser(const std::string& username);
+    UserData* getUser(const std::string& username);
 
     size_t userCacheSize();
     void userCacheClear();

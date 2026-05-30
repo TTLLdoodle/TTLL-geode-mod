@@ -1,7 +1,7 @@
 #include "PlacementCache.hpp"
 
 namespace GlobalList::Cache {
-    static std::unordered_map<int, PlacementCache> placementCache;
+    static std::unordered_map<int, Placement> placementCache;
     static std::vector<int> levelsWOPlacement;
 
     void savePlacement(int levelID, int placement) {

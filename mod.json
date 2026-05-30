@@ -13,7 +13,10 @@
 	"description": "Mod adds some features from demonlist.org",
 	"resources": {
 		"sprites": [
-			"resources/*.png"
+			"resources/BGs/*.png",
+			"resources/icons/*.png",
+			"resources/screenshots/*.png",
+			"resources/flags_png/*.png"
 		]
 	},
 	"dependencies": {

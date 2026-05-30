@@ -1,13 +1,13 @@
 #include "UserCache.hpp"
 
 namespace GlobalList::Cache {
-    static std::unordered_map<std::string, UserCache> userCache;
+    static std::unordered_map<std::string, UserData> userCache;
 
-    void saveUser(const std::string& username, const UserCache& userData) {
+    void saveUser(const std::string& username, const UserData& userData) {
         userCache[username] = userData;
     }
 
-    UserCache* getUser(const std::string& username) {
+    UserData* getUser(const std::string& username) {
         auto it = userCache.find(username);
         if (it == userCache.end()) return nullptr;
 

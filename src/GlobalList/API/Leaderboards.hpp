@@ -4,6 +4,8 @@
 #include <Geode/utils/web.hpp>
 
 #include "../Cache/LeaderboardCache.hpp"
+#include "../Cache/UserCache.hpp"
+#include "../../events/LeaderboardCachedEvent.hpp"
 #include "../../Utils.hpp"
 
 namespace GlobalList::API {

@@ -10,7 +10,7 @@ namespace GlobalList::API {
             [username, loadRecords](web::WebResponse value) {
                 if (!value.ok()) {
                     log::error("Failed to get player info. Failed code: {}", value.code());
-                    Utils::failure(value.code());
+                    Utils::failure(value.code(), "get player info");
                     return;
                 }
 
@@ -18,7 +18,7 @@ namespace GlobalList::API {
 
                 matjson::Value json = data.unwrapOrDefault();
                 if (!json.contains("data") || !json["data"].contains("users") || !json["data"]["users"].isArray() || json["data"]["users"].size() == 0) {
-                    Utils::failure(204);
+                    Utils::failure(value.code(), "get player info");
                     return;
                 }
 
@@ -30,13 +30,12 @@ namespace GlobalList::API {
                         int id = user["id"].asInt().unwrapOr(0);
                         int placement = user["placement"].asInt().unwrapOr(0);
                         double points = user["points"].asDouble().unwrapOr(0.0f);
+                        std::string country = user["country"].asString().unwrapOrDefault();
+                        std::string badge = user["badge"].asString().unwrapOrDefault();
 
-                        auto userData = UserCache{
-                            id,
-                            user["username"].asString().unwrapOr(""),
-                            placement,
-                            points,
-                            {},
+                        auto userData = UserData{
+                            id, user["username"].asString().unwrapOr(""),
+                            placement, points, country, badge, {},
                             std::time(nullptr)
                         };
                         GlobalList::Cache::saveUser(username, userData);
@@ -53,7 +52,7 @@ namespace GlobalList::API {
             [username](web::WebResponse value) {
                 if (!value.ok()) {
                     log::error("Failed to get player records. Failed code: {}", value.code());
-                    Utils::failure(value.code());
+                    Utils::failure(value.code(), "get player records");
                     return;
                 }
 
@@ -61,7 +60,7 @@ namespace GlobalList::API {
 
                 matjson::Value json = data.unwrapOrDefault();
                 if (!json.contains("data") || !json["data"].contains("records") || !json["data"]["records"].isArray() || json["data"]["records"].size() == 0) {
-                    Utils::failure(204);
+                    Utils::failure(value.code(), "get player records");
                     return;
                 }
 

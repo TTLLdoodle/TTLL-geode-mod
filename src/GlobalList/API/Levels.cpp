@@ -8,7 +8,7 @@ namespace GlobalList::API {
             [](web::WebResponse value) {
                 if (!value.ok()) {
                     log::error("Failed to load GlobalList. Failed code: {}", value.code());
-                    Utils::failure(value.code());
+                    Utils::failure(value.code(), "load GlobalList");
                     return;
                 }
 
@@ -17,20 +17,20 @@ namespace GlobalList::API {
 
                 matjson::Value json = data.unwrapOrDefault();
                 if (!json.contains("data") || !json["data"].contains("levels") || !json["data"]["levels"].isArray() || json["data"]["levels"].size() == 0) {
-                    Utils::failure(204);
+                    Utils::failure(value.code(), "load GlobalList");
                     return;
                 }
 
                 for (const auto& level : json["data"]["levels"]) {
-                    int id = level["id"].asInt().unwrapOr(0);
-                    int levelID = level["ingame_id"].asInt().unwrapOr(0);
-                    std::string name = level["name"].asString().unwrapOr("");
-                    int placement = level["placement"].asInt().unwrapOr(0);
-                    int length = level["length"].asInt().unwrapOr(0);
+                    int id = level["id"].asInt().unwrapOrDefault();
+                    int levelID = level["ingame_id"].asInt().unwrapOrDefault();
+                    std::string name = level["name"].asString().unwrapOrDefault();
+                    int placement = level["placement"].asInt().unwrapOrDefault();
+                    int length = level["length"].asInt().unwrapOrDefault();
                     GlobalListLevel newLevel = { id, levelID, name, placement, length };
 
-                    if (newLevel.levelID == 0 || newLevel.name == "" || newLevel.placement == 0) {
-                        Utils::failure(204);
+                    if (id == 0) {
+                        Utils::failure(value.code(), "load GlobalList");
                         return;
                     }
 
@@ -60,7 +60,7 @@ namespace GlobalList::API {
                         auto json = data.unwrapOrDefault();
 
                         if (!json.contains("data") || json["data"].size() == 0) {
-                            Utils::failure(204);
+                            Utils::failure(value.code(), "get level placement");
                             return;
                         }
 
