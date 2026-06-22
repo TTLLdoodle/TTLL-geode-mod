@@ -10,7 +10,7 @@
 	"name": "The trash Levels List",
 	"version": "v3.0.0",
 	"developer": "xboctatuk",
-	"description": "Mod adds some features from demonlist.org",
+	"description": "Mod adds some features from https://thetrashlevelslist.th654.workers.dev/#/",
 	"resources": {
 		"sprites": [
 			"resources/BGs/*.png",
